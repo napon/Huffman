@@ -12,7 +12,7 @@ public class Main {
      * 2. Create a HuffmanNode class where each node contains char:character, int:frequency, HuffmanNode:leftNode, HuffmanNode:rightNode
      * 3. Build a priority queue using the Map we just created and fill it with HuffmanNodes
      * 4. Build another map but this time we map each character to its binary representation using the priorityQueue
-     * 5. Generate a new text file with the encoded text
+     * 5. Generate a new String with binary text (compressed)
      */
     public static void main(String[] args) throws IOException {
 
@@ -74,4 +74,20 @@ public class Main {
         return null;
     }
 
+    /**
+     * Step 4: Use the PQTree to build another map that maps each character to a binary representation
+     */
+    private Map<Character, String> buildCharacterToBinaryMap(PriorityQueue<HuffmanNode> priorityQueue){
+
+        return null;
+    }
+
+    
+    /**
+     * Step 5: Generate a String with the characters encoded to Binary
+     */
+    private String createEncodedString(String original, Map<Character, String> binaryMap){
+
+        return null;
+    }
 }
