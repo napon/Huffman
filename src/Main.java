@@ -23,6 +23,7 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 
 		String textFile = readFile("src/alice30.txt");
+		System.out.println(textFile);
 		buildCharacterToFrequencyMap(textFile);
 
 	}
