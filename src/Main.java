@@ -115,10 +115,15 @@ public class Main {
 
 
 	/**
-	 * Step 5: Generate a String with the characters encoded to Binary
+	 * Step 5: Generate a String with the characters encoded to Binary - DONE
 	 */
 	private String createEncodedString(String original, Map<Character, String> binaryMap){
-
-		return null;
+        StringBuilder  stringBuilder = new StringBuilder();
+        for (int i = 0; i < original.length(); i++) {
+            char c = original.charAt(i);
+            String bCode = binaryMap.get(c);
+            stringBuilder.append(bCode);
+        }
+		return stringBuilder.toString();
 	}
 }
