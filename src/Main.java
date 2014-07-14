@@ -23,8 +23,15 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 
 		String textFile = readFile("src/alice30.txt");
-		System.out.println(textFile);
-		buildCharacterToFrequencyMap(textFile);
+		Map<Character, Integer> freqMap = buildCharacterToFrequencyMap(textFile);
+        HuffmanNode headNode = buildPQTTree(freqMap);
+        assignBinary(headNode, "");
+        Map<Character, String> bMap = buildCharacterToBinaryMap(headNode);
+        String result = createEncodedString(textFile, bMap);
+        System.out.println("DONE: compressed string is " + result);
+        System.out.println("\nSize of original string is " + textFile.length());
+        System.out.println("Size of binary string is " + result.length() / 8);
+        System.out.println("% Compression = " + textFile.length() / ((double) result.length() / 8) * 100);
 
 	}
 
@@ -52,7 +59,6 @@ public class Main {
 	 * Step 1: Create a Map<Character, Integer> (character to frequency) from the input String - DONE
 	 */
 	private static Map<Character, Integer> buildCharacterToFrequencyMap(String text) {
-		System.out.println("BuildCharacterToFrequency");
 		HashMap<Character,Integer> map = new HashMap<Character,Integer>();
 		for (int i = 0; i < text.length(); i++) { //iterating through all the chars in text
 			char c = text.charAt(i);
@@ -99,7 +105,6 @@ public class Main {
 
 	// helper method for adding to the priority queue of HuffmanNodes
 	private static Queue<HuffmanNode> createNodeQueue(Map<Character, Integer> map) {
-		System.out.println("Step 3: createNodeQueue");
 		final Queue<HuffmanNode> pq = new PriorityQueue<HuffmanNode>(10000, new HuffManComparator());
 		Main hi = new Main(); //because you're trying to create an instance of an inner class -_-
 		for (Entry<Character, Integer> entry : map.entrySet()) {
@@ -110,7 +115,6 @@ public class Main {
 
 	//building the PQTree
 	private static HuffmanNode buildPQTTree(Map<Character, Integer> freqMap) {
-		System.out.println("Step 3: buildPQTTree");
 		final Queue<HuffmanNode> nodeQueue = createNodeQueue(freqMap);
 		Main hi = new Main(); //because you're trying to create an instance of an inner class -_-
 		while (nodeQueue.size() > 1) {
@@ -124,25 +128,42 @@ public class Main {
 	}
 
 
+    /**
+     * Step 3.5: assign binary code to each node
+     */
+    private static void assignBinary(HuffmanNode node, String code) {
+        if(node.leftNode == null && node.rightNode == null){
+            node.binaryCode = code;
+            return;
+        } else {
+            assignBinary(node.leftNode, code + "0");
+            assignBinary(node.rightNode, code + "1");
+        }
+    }
+
 	/**
 	 * Step 4: Use the PQTree to build another map that maps each character to a binary representation - DONE
 	 */
-	private Map<Character, String> buildCharacterToBinaryMap(PriorityQueue<HuffmanNode> priorityQueue){
-		System.out.println("BuildCharacterToBinaryMap");
+	private static Map<Character, String> buildCharacterToBinaryMap(HuffmanNode node){
 		HashMap<Character, String> bMap = new HashMap<Character, String>();
-		for (int i = 0; i < priorityQueue.size(); i++) {
-			HuffmanNode c = priorityQueue.poll();
-			bMap.put(c.c, c.binaryCode);
-		}
-		System.out.println(bMap);
+		iterateTree(node, bMap);
+
 		return bMap;
 	}
 
+    private static void iterateTree(HuffmanNode node, HashMap<Character, String> bMap) {
+        if(node.leftNode == null && node.rightNode == null){
+            bMap.put(node.c, node.binaryCode);
+        } else {
+            iterateTree(node.leftNode, bMap);
+            iterateTree(node.rightNode, bMap);
+        }
+    }
 
 	/**
 	 * Step 5: Generate a String with the characters encoded to Binary - DONE
 	 */
-	private String createEncodedString(String original, Map<Character, String> binaryMap){
+	private static String createEncodedString(String original, Map<Character, String> binaryMap){
 		StringBuilder  stringBuilder = new StringBuilder();
 		for (int i = 0; i < original.length(); i++) {
 			char c = original.charAt(i);
