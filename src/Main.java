@@ -13,7 +13,7 @@ public class Main {
 	 * Steps:
 	 * 1. Parse text file into a Map<Character, Integer> (character to frequency).
 	 * 2. Create a HuffmanNode class where each node contains char:character, int:frequency, HuffmanNode:leftNode, HuffmanNode:rightNode
-	 * 3. Build a priority queue using the Map we just created and fill it with HuffmanNodes
+	 * 3. Build a min priority queue using the Map we just created and fill it with HuffmanNodes
 	 * 4. Build another map but this time we map each character to its binary representation using the priorityQueue
 	 * 5. Generate a new String with binary text (compressed)
 	 */
@@ -31,6 +31,7 @@ public class Main {
 	 * @return
 	 * @throws IOException
 	 */
+	
 	private static String readFile( String file ) throws IOException {
 		System.out.println("ReadFile");
 		BufferedReader reader = new BufferedReader( new FileReader(file));
@@ -46,7 +47,7 @@ public class Main {
 	}
 
 	/**
-	 * Step 1: Create a Map<Character, Integer> (character to frequency) from the input String
+	 * Step 1: Create a Map<Character, Integer> (character to frequency) from the input String - DONE
 	 */
 	private static Map<Character, Integer> buildCharacterToFrequencyMap(String text) {
 		System.out.println("BuildCharacterToFrequency");
@@ -65,29 +66,37 @@ public class Main {
 	}
 
 	/**
-	 * Step 2: HuffmanNode class to represent a node in the priorityQueue tree
+	 * Step 2: HuffmanNode class to represent a node in the priorityQueue tree - DONE
 	 */
 	private class HuffmanNode {
 		public char c;
 		public int frequency;
 		public HuffmanNode leftNode;
 		public HuffmanNode rightNode;
+		public String binaryCode;
 
-		public HuffmanNode(char c, int frequency, HuffmanNode leftNode, HuffmanNode rightNode){
+		public HuffmanNode(char c, int frequency, HuffmanNode leftNode, HuffmanNode rightNode, String binaryCode){
 			this.c = c;
 			this.frequency = frequency;
 			this.leftNode = leftNode;
 			this.rightNode = rightNode;
+			this.binaryCode = binaryCode;
 		}
 		
 	}
 
 	/**
-	 * Step 3: Build a priorityQueue tree of HuffmanNodes from an input map
+	 * Step 3: Build a min priorityQueue tree of HuffmanNodes from an input map - DOING
 	 */
 	private PriorityQueue<HuffmanNode> buildPQTree(Map<Character, Integer> freqMap) {
 	     Set setOfEntries = freqMap.entrySet(); //get a set of the map's entries
-	     Iterator i = setOfEntries.iterator(); 
+	     Iterator i = setOfEntries.iterator(); //making a hashmap iterator
+	     while (i.hasNext()) {
+	    	 Map.Entry pairs = (Map.Entry)i.next();
+	    	 
+	    	 i.remove();
+	     }
+	     
 		
 		return null;
 	}
