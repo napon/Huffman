@@ -20,18 +20,16 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 
 		String textFile = readFile("src/alice30.txt");
-		System.out.println(textFile);
 		buildCharacterToFrequencyMap(textFile);
 
 	}
 
 	/**
-	 * Convert a txt file into a String
+	 * Convert a txt file into a String - DONE
 	 * @param file
 	 * @return
 	 * @throws IOException
 	 */
-	
 	private static String readFile( String file ) throws IOException {
 		System.out.println("ReadFile");
 		BufferedReader reader = new BufferedReader( new FileReader(file));
@@ -102,11 +100,17 @@ public class Main {
 	}
 
 	/**
-	 * Step 4: Use the PQTree to build another map that maps each character to a binary representation
+	 * Step 4: Use the PQTree to build another map that maps each character to a binary representation - DONE
 	 */
 	private Map<Character, String> buildCharacterToBinaryMap(PriorityQueue<HuffmanNode> priorityQueue){
-
-		return null;
+        System.out.println("BuildCharacterToBinaryMap");
+        HashMap<Character, String> bMap = new HashMap<Character, String>();
+        for (int i = 0; i < priorityQueue.size(); i++) {
+            HuffmanNode c = priorityQueue.poll();
+            bMap.put(c.c, c.binaryCode);
+        }
+        System.out.println(bMap);
+        return bMap;
 	}
 
 
