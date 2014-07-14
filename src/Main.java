@@ -24,21 +24,52 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 
 		String textFile = readFile("src/alice30.txt");
+        //System.out.println(textFile);
 		Map<Character, Integer> freqMap = buildCharacterToFrequencyMap(textFile);
         HuffmanNode headNode = buildPQTTree(freqMap);
         assignBinary(headNode, "");
         Map<Character, String> bMap = buildCharacterToBinaryMap(headNode);
         String result = createEncodedString(textFile, bMap);
-        System.out.println("DONE: comprcessed string is " + result);
+       // System.out.println("DONE: comprcessed string is " + result);
         System.out.println("tree representation: " + tree);
         System.out.println("\nSize of original string is " + textFile.length() + " bytes");
-        System.out.println("size of tree is " + tree.length() / 8 + " bytes");
+        System.out.println("size of tree is " + tree.length()  + " bytes");
         System.out.println("Size of binary string is " + result.length() / 8 + " bytes");
-        System.out.println("\n% Compression = " + textFile.length() / ((double) result.length() / 8) * 100);
+        System.out.println("\n% Compression = " + ((double) result.length() / 8) / textFile.length() * 100);
 
+
+        String decoded = decode(result, bMap);
+        System.out.println("decoded = \n" + decoded);
 	}
 
-	/**
+    private static String decode(String result, Map<Character, String> binaryMap) {
+        StringBuilder  stringBuilder = new StringBuilder();
+        int counter = 0;
+        String temp = "";
+        while( counter < result.length()) {
+            temp = temp + result.charAt(counter);
+            String character = getKeyByValue(binaryMap, temp);
+            if(character == null) {
+                counter++;
+            } else {
+                stringBuilder.append(character);
+                temp = "";
+                counter++;
+            }
+        }
+        return stringBuilder.toString();
+    }
+
+    private static String getKeyByValue(Map<Character, String> binaryMap, String temp) {
+        for (Entry<Character, String> entry : binaryMap.entrySet()) {
+            if (temp.equals(entry.getValue())) {
+                return entry.getKey().toString();
+            }
+        }
+        return null;
+    }
+
+    /**
 	 * Convert a txt file into a String - DONE
 	 * @param file
 	 * @return
@@ -137,7 +168,7 @@ public class Main {
     private static void assignBinary(HuffmanNode node, String code) {
         if(node.leftNode == null && node.rightNode == null){
             node.binaryCode = code;
-            return;
+           // return;
         } else {
             assignBinary(node.leftNode, code + "0");
             assignBinary(node.rightNode, code + "1");
@@ -157,22 +188,15 @@ public class Main {
     private static void iterateTree(HuffmanNode node, HashMap<Character, String> bMap) {
         if(node.leftNode == null && node.rightNode == null){
             bMap.put(node.c, node.binaryCode);
+            System.out.print(node.c + ": "+ node.frequency);
             tree = tree + "1" + Integer.toBinaryString((int) node.c);
+            return;
         } else {
             tree = tree + "0";
             iterateTree(node.leftNode, bMap);
             iterateTree(node.rightNode, bMap);
         }
     }
-
-
-    /**printTree (t) {
-     if (leaf) print 1;
-     else {
-     print 0;
-     printTree(t.left);
-     printTree(t.right(;
-     }}}//
 
 	/**
 	 * Step 5: Generate a String with the characters encoded to Binary - DONE
