@@ -12,6 +12,7 @@ import java.util.Set;
 
 public class Main {
 
+    static String tree = "";
 	/**
 	 * Steps:
 	 * 1. Parse text file into a Map<Character, Integer> (character to frequency).
@@ -28,10 +29,12 @@ public class Main {
         assignBinary(headNode, "");
         Map<Character, String> bMap = buildCharacterToBinaryMap(headNode);
         String result = createEncodedString(textFile, bMap);
-        System.out.println("DONE: compressed string is " + result);
-        System.out.println("\nSize of original string is " + textFile.length());
-        System.out.println("Size of binary string is " + result.length() / 8);
-        System.out.println("% Compression = " + textFile.length() / ((double) result.length() / 8) * 100);
+        System.out.println("DONE: comprcessed string is " + result);
+        System.out.println("tree representation: " + tree);
+        System.out.println("\nSize of original string is " + textFile.length() + " bytes");
+        System.out.println("size of tree is " + tree.length() / 8 + " bytes");
+        System.out.println("Size of binary string is " + result.length() / 8 + " bytes");
+        System.out.println("\n% Compression = " + textFile.length() / ((double) result.length() / 8) * 100);
 
 	}
 
@@ -154,11 +157,22 @@ public class Main {
     private static void iterateTree(HuffmanNode node, HashMap<Character, String> bMap) {
         if(node.leftNode == null && node.rightNode == null){
             bMap.put(node.c, node.binaryCode);
+            tree = tree + "1" + Integer.toBinaryString((int) node.c);
         } else {
+            tree = tree + "0";
             iterateTree(node.leftNode, bMap);
             iterateTree(node.rightNode, bMap);
         }
     }
+
+
+    /**printTree (t) {
+     if (leaf) print 1;
+     else {
+     print 0;
+     printTree(t.left);
+     printTree(t.right(;
+     }}}//
 
 	/**
 	 * Step 5: Generate a String with the characters encoded to Binary - DONE
