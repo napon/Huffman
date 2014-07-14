@@ -89,11 +89,22 @@ public class Main {
 	/**
 	 * Step 3: Build a min priorityQueue tree of HuffmanNodes from an input map - DOING
 	 */
-	//to compare which node has higher frequency
+	//helper method to compare which node has higher frequency
 	private static class HuffManComparator implements Comparator<HuffmanNode> { 
 		public int compare(HuffmanNode node1, HuffmanNode node2) {
 			return node1.frequency - node2.frequency;
 		}
+	}
+
+	// helper method for adding to the priority queue of HuffmanNodes
+	private static Queue<HuffmanNode> createNodeQueue(Map<Character, Integer> map) {
+		System.out.println("Step 3: createNodeQueue");
+		final Queue<HuffmanNode> pq = new PriorityQueue<HuffmanNode>(10000, new HuffManComparator());
+		Main hi = new Main(); //because you're trying to create an instance of an inner class -_-
+		for (Entry<Character, Integer> entry : map.entrySet()) {
+			pq.add(hi.new HuffmanNode(entry.getKey(), entry.getValue(), null, null, null));
+		}
+		return pq;
 	}
 
 	//building the PQTree
@@ -109,17 +120,6 @@ public class Main {
 		}
 		// remove it to prevent object leak.
 		return nodeQueue.remove();
-	}
-
-	//adding to the priority queue of HuffmanNodes
-	private static Queue<HuffmanNode> createNodeQueue(Map<Character, Integer> map) {
-		System.out.println("Step 3: createNodeQueue");
-		final Queue<HuffmanNode> pq = new PriorityQueue<HuffmanNode>(10000, new HuffManComparator());
-		Main hi = new Main(); //because you're trying to create an instance of an inner class -_-
-		for (Entry<Character, Integer> entry : map.entrySet()) {
-			pq.add(hi.new HuffmanNode(entry.getKey(), entry.getValue(), null, null, null));
-		}
-		return pq;
 	}
 
 
