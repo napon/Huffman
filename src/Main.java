@@ -1,10 +1,13 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Set;
 
 public class Main {
@@ -80,37 +83,58 @@ public class Main {
 			this.rightNode = rightNode;
 			this.binaryCode = binaryCode;
 		}
-		
+
 	}
 
 	/**
 	 * Step 3: Build a min priorityQueue tree of HuffmanNodes from an input map - DOING
 	 */
-	private PriorityQueue<HuffmanNode> buildPQTree(Map<Character, Integer> freqMap) {
-	     Set setOfEntries = freqMap.entrySet(); //get a set of the map's entries
-	     Iterator i = setOfEntries.iterator(); //making a hashmap iterator
-	     while (i.hasNext()) {
-	    	 Map.Entry pairs = (Map.Entry)i.next();
-	    	 
-	    	 i.remove();
-	     }
-	     
-		
-		return null;
+	//to compare which node has higher frequency
+	private static class HuffManComparator implements Comparator<HuffmanNode> { 
+		public int compare(HuffmanNode node1, HuffmanNode node2) {
+			return node1.frequency - node2.frequency;
+		}
 	}
+
+	//building the PQTree
+	private static HuffmanNode buildPQTTree(Map<Character, Integer> freqMap) {
+		System.out.println("Step 3: buildPQTTree");
+		final Queue<HuffmanNode> nodeQueue = createNodeQueue(freqMap);
+		Main hi = new Main(); //because you're trying to create an instance of an inner class -_-
+		while (nodeQueue.size() > 1) {
+			final HuffmanNode node1 = nodeQueue.remove();
+			final HuffmanNode node2 = nodeQueue.remove();
+			HuffmanNode node = hi.new HuffmanNode('\0', node1.frequency + node2.frequency, node1, node2, null);
+			nodeQueue.add(node);
+		}
+		// remove it to prevent object leak.
+		return nodeQueue.remove();
+	}
+
+	//adding to the priority queue of HuffmanNodes
+	private static Queue<HuffmanNode> createNodeQueue(Map<Character, Integer> map) {
+		System.out.println("Step 3: createNodeQueue");
+		final Queue<HuffmanNode> pq = new PriorityQueue<HuffmanNode>(10000, new HuffManComparator());
+		Main hi = new Main(); //because you're trying to create an instance of an inner class -_-
+		for (Entry<Character, Integer> entry : map.entrySet()) {
+			pq.add(hi.new HuffmanNode(entry.getKey(), entry.getValue(), null, null, null));
+		}
+		return pq;
+	}
+
 
 	/**
 	 * Step 4: Use the PQTree to build another map that maps each character to a binary representation - DONE
 	 */
 	private Map<Character, String> buildCharacterToBinaryMap(PriorityQueue<HuffmanNode> priorityQueue){
-        System.out.println("BuildCharacterToBinaryMap");
-        HashMap<Character, String> bMap = new HashMap<Character, String>();
-        for (int i = 0; i < priorityQueue.size(); i++) {
-            HuffmanNode c = priorityQueue.poll();
-            bMap.put(c.c, c.binaryCode);
-        }
-        System.out.println(bMap);
-        return bMap;
+		System.out.println("BuildCharacterToBinaryMap");
+		HashMap<Character, String> bMap = new HashMap<Character, String>();
+		for (int i = 0; i < priorityQueue.size(); i++) {
+			HuffmanNode c = priorityQueue.poll();
+			bMap.put(c.c, c.binaryCode);
+		}
+		System.out.println(bMap);
+		return bMap;
 	}
 
 
@@ -118,12 +142,12 @@ public class Main {
 	 * Step 5: Generate a String with the characters encoded to Binary - DONE
 	 */
 	private String createEncodedString(String original, Map<Character, String> binaryMap){
-        StringBuilder  stringBuilder = new StringBuilder();
-        for (int i = 0; i < original.length(); i++) {
-            char c = original.charAt(i);
-            String bCode = binaryMap.get(c);
-            stringBuilder.append(bCode);
-        }
+		StringBuilder  stringBuilder = new StringBuilder();
+		for (int i = 0; i < original.length(); i++) {
+			char c = original.charAt(i);
+			String bCode = binaryMap.get(c);
+			stringBuilder.append(bCode);
+		}
 		return stringBuilder.toString();
 	}
 }
